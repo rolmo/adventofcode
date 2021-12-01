@@ -3,18 +3,21 @@
 # Usage: cat advent01.input | ./advent01_b.py
 
 import sys
-
-list = []
-for line in sys.stdin:
-    list.append(int(line))
+import collections
 
 window_size = 3
-number_of_compares = len(list) - window_size
+shift_register = collections.deque([], window_size)
 
+last = None
 increased = 0
-if number_of_compares > 0:
-    for i in range(number_of_compares):
-        if sum(list[i:i+window_size]) < sum(list[i+1:i+window_size+1]):
+for line in sys.stdin:
+    shift_register.append(int(line))
+    if len(shift_register) == window_size:
+        window_sum = 0
+        for value in shift_register:
+            window_sum += value
+        if last and window_sum > last:
             increased += 1
+        last = window_sum
 
 print(increased)
