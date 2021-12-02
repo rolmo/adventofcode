@@ -7,9 +7,9 @@ import sys
 last = None
 increase = 0
 for line in sys.stdin:
-  value = int(line)
-  if last and value > last:
-    increase += 1
-  last = value
+    value = int(line)
+    if last and value > last:
+        increase += 1
+    last = value
 
 print(increase)

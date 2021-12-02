@@ -6,9 +6,9 @@ import sys
 
 depth = horizontal = 0
 for line in sys.stdin:
-  (command,argument) = line.split()
-  if command == "down": depth += int(argument)
-  if command == "up": depth -= int(argument)
-  if command == "forward": horizontal += int(argument)
+    (command,argument) = line.split()
+    if command == "down": depth += int(argument)
+    if command == "up": depth -= int(argument)
+    if command == "forward": horizontal += int(argument)
 
 print(depth, horizontal, depth * horizontal)
