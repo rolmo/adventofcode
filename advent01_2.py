@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Usage: cat advent01.input | ./advent01_b.py
+# Usage: cat advent01.input | ./advent01_2.py
 
 import sys
 import collections
