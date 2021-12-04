@@ -27,12 +27,12 @@ import re
 
 def main():
     # First line of input contains the guessed numbers (we convert to array-of-int)
-    guessed_numbers=list(map(int, sys.stdin.readline().strip().split(',')))
+    random_list=list(map(int, sys.stdin.readline().strip().split(',')))
 
     # Array with all board:
     boards = []
 
-    # Read input and create all boards:
+    # Read the rest of the input and create all boards:
     for line in sys.stdin:
         if line.strip():
             # Non empty line: convert to array-of-int and add to the last board:
@@ -42,33 +42,35 @@ def main():
             board = Board()
             boards.append(board)
 
+
     print("Find the first board that wins")
-    (sum, number) = guess(boards, guessed_numbers, "find first")
-    print("Sum of unmarked numbers: {}, last guessed number: {}, Product {}".format(sum, number, sum*number))
+    board = guess(boards, random_list, "find first")
+    print("Sum of unmarked numbers: {}, last guessed number: {}, Product {}".format(board.get_unmarked_sum(), board.last_marked, board.get_unmarked_sum() * board.last_marked))
     # Sum of unmarked numbers: 1137, last guessed number: 5, Product 5685
 
     print("Find the last board that wins")
-    (sum, number) = guess(boards, guessed_numbers, "find last")
-    print("Sum of unmarked numbers: {}, last guessed number: {}, Product {}".format(sum, number, sum*number))
+    board = guess(boards, random_list, "find last")
+    print("Sum of unmarked numbers: {}, last guessed number: {}, Product {}".format(board.get_unmarked_sum(), board.last_marked, board.get_unmarked_sum() * board.last_marked))
     # Sum of unmarked numbers: 430, last guessed number: 49, Product 21070
 
 
-def guess (boards, guessed_numbers, strategy):
-    last_guessed = last_sum = 0
-    for guessed in guessed_numbers:
-        # print("Guessing ",guessed)
+def guess (boards, random_list, strategy):
+    """
+    Check each random number agains all board and returns the first or the last
+    board that has a Bingo!
+    """
+    for guessed in random_list:
         for board in boards:
             if board.bingo:
                 continue
             board.mark(guessed)
             #print(board)
             if not board.bingo and board.check_bingo():
-                sum = board.get_unmarked_sum()
                 if strategy == "find first":
-                    return (sum, guessed)
-                last_guessed = guessed
-                last_sum = sum
-    return (last_sum, last_guessed)
+                    # Stop immediately at the first bingo:
+                    return board
+                last_bing_board = board
+    return last_bing_board
 
 
 
@@ -80,6 +82,7 @@ class Board:
         for row in range(5):
             self.marked.append([False]*5)
         self.bingo = False
+        self.last_marked = None
 
     def add_row (self, row):
         self.board.append(row)
@@ -90,6 +93,7 @@ class Board:
                 if self.board[row][col] == guessed:
                     #print("Mark number {} row={} and col={}".format(guessed,row,col))
                     self.marked[row][col] = True
+                    self.last_marked = guessed
 
     def check_bingo(self):
         for row in range(5):
