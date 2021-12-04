@@ -46,21 +46,21 @@ def main():
             boards.append(board)
 
 
-    print("Find the first board that wins:")
+    print("Find the first winning board:")
     board = run(boards, random_list, "find first")
     print(board)
     sum = board.get_unmarked_sum()
     last_marked = board.last_marked
-    print("Sum of unmarked numbers: {}, last maked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
-    # Sum of unmarked numbers: 1137, last maked number: 5, Product 5685
+    print("Sum of unmarked numbers: {}, last marked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
+    # Sum of unmarked numbers: 1137, last marked number: 5, Product 5685
 
-    print("Find the last board that wins:")
+    print("Find the last winning board:")
     board = run(boards, random_list, "find last")
     print(board)
     sum = board.get_unmarked_sum()
     last_marked = board.last_marked
-    print("Sum of unmarked numbers: {}, last maked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
-    # Sum of unmarked numbers: 430, last maked number: 49, Product 21070
+    print("Sum of unmarked numbers: {}, last marked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
+    # Sum of unmarked numbers: 430, last marked number: 49, Product 21070
 
 
 
@@ -80,8 +80,8 @@ def run (boards, random_list, strategy):
                 if strategy == "find first":
                     # Stop immediately and return first bingo board:
                     return board
-                last_bing_board = board
-    return last_bing_board
+                last_bingo_board = board
+    return last_bingo_board
 
 
 
@@ -98,15 +98,14 @@ class Board:
     def mark (self, number):
         for row in range(5):
             for col in range(5):
-                if self.matrix[row][col].number == number:
-                    self.matrix[row][col].marked = True
+                if self.matrix[row][col].mark(number):
                     self.last_marked = number
 
     def check_bingo(self):
         for row in range(5):
             hit = True
             for col in range(5):
-                if not self.matrix[row][col].marked:
+                if not bool(self.matrix[row][col]):
                     hit = False
             if hit:
                 self.bingo = True
@@ -114,7 +113,7 @@ class Board:
         for col in range(5):
             hit = True
             for row in range(5):
-                if not self.matrix[row][col].marked:
+                if not bool(self.matrix[row][col]):
                     hit = False
             if hit:
                 self.bingo = True
@@ -125,8 +124,8 @@ class Board:
         sum = 0
         for row in range(5):
             for col in range(5):
-                if not self.matrix[row][col].marked:
-                    sum += self.matrix[row][col].number
+                # the int() returns 0 for marked Cells:
+                sum += int(self.matrix[row][col])
         return sum
 
     def __str__(self):
@@ -137,6 +136,23 @@ class Board:
 class Cell:
     number: int
     marked: bool = False
+
+    def mark(self, number):
+        if number == self.number:
+            self.marked = True
+        return self.marked
+
+    def __eq__(self, other):
+        return self.number == other
+
+    def __int__ (self):
+        if self.marked:
+            return 0
+        else:
+            return self.number
+
+    def __bool__ (self):
+        return self.marked
 
     def __str__ (self):
         return f"\033[91m{self.number:2}\033[0m" if self.marked else f"{self.number:2}"
