@@ -18,7 +18,7 @@ Part Two:
 
 Figure out which board will win last
 
-Calculate the result as in part one.
+Calculate the result like part one.
 """
 
 
