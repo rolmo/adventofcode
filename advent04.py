@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
 
-# Usage: cat advent04.input | ./advent04_1.py
+# Usage: cat advent04.input | ./advent04.py
 
 import sys
 import re
 
 def main():
+    # First line of input contains the guessed numbers (we convert to array if int)
     guessed_numbers=list(map(int, sys.stdin.readline().strip().split(',')))
 
+    # Array with all board:
     boards = []
-    board = None
-    board_number = 0
+
+    # Read input and create all boards:
     for line in sys.stdin:
         if line.strip():
+            # Non empty line: convert to array of int and add to the last created board:
             board.add_row(list(map(int, re.split("\s+",line.strip()))))
         else:
             # Empty line: create a new board
-            board_number += 1
-            board = Board(board_number)
+            board = Board()
             boards.append(board)
 
     print("Find the first board that wins")
@@ -50,16 +52,13 @@ def guess (boards, guessed_numbers, strategy):
 
 
 
-
 class Board:
-    board_number = None
 
-    def __init__ (self, board_number):
+    def __init__ (self):
         self.rows = []
         self.marked = []
         for row in range(5):
             self.marked.append([False]*5)
-        self.board_number = board_number
         self.bingo = False
 
     def add_row (self, row):
@@ -69,7 +68,7 @@ class Board:
         for row in range(5):
             for col in range(5):
                 if self.rows[row][col] == guessed:
-                    #print("Mark number {} in board={}, row={} and col={}".format(guessed,self.board_number,row,col))
+                    #print("Mark number {} row={} and col={}".format(guessed,row,col))
                     self.marked[row][col] = True
 
     def check_bingo(self):
@@ -79,7 +78,7 @@ class Board:
                 if not self.marked[row][col]:
                     hit = False
             if hit:
-                #print("Hit in board {} in row {}".format(self.board_number,row+1))
+                #print("Hit in row {}".format(row+1))
                 self.bingo = True
         for col in range(5):
             hit = True
@@ -87,7 +86,7 @@ class Board:
                 if not self.marked[row][col]:
                     hit = False
             if hit:
-                #print("Hit in board {} in col {}".format(self.board_number,col+1))
+                #print("Hit in col {}".format(col+1))
                 self.bingo = True
         return self.bingo
 
@@ -99,9 +98,9 @@ class Board:
                     sum += self.rows[row][col]
         return sum
 
-
+    # Only for the debug output: string representation of the board and marks
     def __str__(self):
-        out = "-------{}------\n".format(self.board_number)
+        out = "-------------\n"
         for row in self.rows:
             for num in row:
                 out += "|" + str(num)
