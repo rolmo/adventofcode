@@ -29,7 +29,7 @@ def main():
     # First line of input contains the guessed numbers (we convert to array-of-int)
     random_list=list(map(int, sys.stdin.readline().strip().split(',')))
 
-    # Array with all board:
+    # Array with all boards:
     boards = []
 
     # Read the rest of the input and create all boards:
@@ -62,12 +62,13 @@ def guess (boards, random_list, strategy):
     for guessed in random_list:
         for board in boards:
             if board.bingo:
+                # To find the last board, we skip boards with an Bingo!
                 continue
             board.mark(guessed)
             #print(board)
-            if not board.bingo and board.check_bingo():
+            if board.check_bingo():
                 if strategy == "find first":
-                    # Stop immediately at the first bingo:
+                    # Stop immediately and return first bingo board:
                     return board
                 last_bing_board = board
     return last_bing_board
