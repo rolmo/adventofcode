@@ -45,6 +45,7 @@ def main():
 
     print("Find the first board that wins:")
     board = guess(boards, random_list, "find first")
+    print(board)
     sum = board.get_unmarked_sum()
     last_marked = board.last_marked
     print("Sum of unmarked numbers: {}, last maked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
@@ -52,6 +53,7 @@ def main():
 
     print("Find the last board that wins:")
     board = guess(boards, random_list, "find last")
+    print(board)
     sum = board.get_unmarked_sum()
     last_marked = board.last_marked
     print("Sum of unmarked numbers: {}, last maked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
@@ -85,9 +87,7 @@ class Board:
 
     def __init__ (self):
         self.board = []
-        self.marked = []
-        for row in range(5):
-            self.marked.append([False]*5)
+        self.marked = [[False for col in range(5)] for row in range(5)]
         self.bingo = False
         self.last_marked = None
 
@@ -111,6 +111,7 @@ class Board:
             if hit:
                 #print("Hit in row {}".format(row+1))
                 self.bingo = True
+                return True
         for col in range(5):
             hit = True
             for row in range(5):
@@ -119,7 +120,8 @@ class Board:
             if hit:
                 #print("Hit in col {}".format(col+1))
                 self.bingo = True
-        return self.bingo
+                return True
+        return False
 
     def get_unmarked_sum(self):
         sum = 0
@@ -131,15 +133,16 @@ class Board:
 
     # Only for the debug output: string representation of the board and marks
     def __str__(self):
-        out = "-------------\n"
+        out = " " + "-"*26 + "\n"
         for row in self.board:
             for num in row:
-                out += "|" + str(num)
-            out += "|\n"
+                out += " | " + "{:>2}".format(num)
+            out += " |\n"
+        out += "\n"
         for row in self.marked:
             for bool in row:
-                out += "|" + ("X" if bool else "-")
-            out += "|\n"
+                out += " | " + (" X" if bool else " -")
+            out += " |\n"
         return out
 
 
