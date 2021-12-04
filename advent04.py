@@ -24,9 +24,12 @@ Calculate the result like part one.
 
 import sys
 import re
+from dataclasses import dataclass
+from pprint import pformat
+
 
 def main():
-    # First line of input contains the guessed numbers (we convert to array-of-int)
+    # First line of input contains the random numbers (we convert to array-of-int)
     random_list=list(map(int, sys.stdin.readline().strip().split(',')))
 
     # Array with all boards:
@@ -44,7 +47,7 @@ def main():
 
 
     print("Find the first board that wins:")
-    board = guess(boards, random_list, "find first")
+    board = run(boards, random_list, "find first")
     print(board)
     sum = board.get_unmarked_sum()
     last_marked = board.last_marked
@@ -52,7 +55,7 @@ def main():
     # Sum of unmarked numbers: 1137, last maked number: 5, Product 5685
 
     print("Find the last board that wins:")
-    board = guess(boards, random_list, "find last")
+    board = run(boards, random_list, "find last")
     print(board)
     sum = board.get_unmarked_sum()
     last_marked = board.last_marked
@@ -62,7 +65,7 @@ def main():
 
 
 
-def guess (boards, random_list, strategy):
+def run (boards, random_list, strategy):
     """
     Check each random number agains all board and returns the first or the last
     board that has a Bingo!
@@ -73,7 +76,6 @@ def guess (boards, random_list, strategy):
                 # To find the last board, we skip boards with an Bingo!
                 continue
             board.mark(number)
-            #print(board)
             if board.check_bingo():
                 if strategy == "find first":
                     # Stop immediately and return first bingo board:
@@ -86,39 +88,35 @@ def guess (boards, random_list, strategy):
 class Board:
 
     def __init__ (self):
-        self.board = []
-        self.marked = [[False for col in range(5)] for row in range(5)]
+        self.matrix = []
         self.bingo = False
         self.last_marked = None
 
     def add_row (self, row):
-        self.board.append(row)
+        self.matrix.append(list(map(lambda x: Cell(x), row)))
 
     def mark (self, number):
         for row in range(5):
             for col in range(5):
-                if self.board[row][col] == number:
-                    #print("Mark number {} row={} and col={}".format(guessed,row,col))
-                    self.marked[row][col] = True
+                if self.matrix[row][col].number == number:
+                    self.matrix[row][col].marked = True
                     self.last_marked = number
 
     def check_bingo(self):
         for row in range(5):
             hit = True
             for col in range(5):
-                if not self.marked[row][col]:
+                if not self.matrix[row][col].marked:
                     hit = False
             if hit:
-                #print("Hit in row {}".format(row+1))
                 self.bingo = True
                 return True
         for col in range(5):
             hit = True
             for row in range(5):
-                if not self.marked[row][col]:
+                if not self.matrix[row][col].marked:
                     hit = False
             if hit:
-                #print("Hit in col {}".format(col+1))
                 self.bingo = True
                 return True
         return False
@@ -127,23 +125,24 @@ class Board:
         sum = 0
         for row in range(5):
             for col in range(5):
-                if not self.marked[row][col]:
-                    sum += self.board[row][col]
+                if not self.matrix[row][col].marked:
+                    sum += self.matrix[row][col].number
         return sum
 
-    # Only for the debug output: string representation of the board and marks
     def __str__(self):
-        out = " " + "-"*26 + "\n"
-        for row in self.board:
-            for num in row:
-                out += " | " + "{:>2}".format(num)
-            out += " |\n"
-        out += "\n"
-        for row in self.marked:
-            for bool in row:
-                out += " | " + (" X" if bool else " -")
-            out += " |\n"
-        return out
+        return pformat(self.matrix)
+
+
+@dataclass
+class Cell:
+    number: int
+    marked: bool = False
+
+    def __str__ (self):
+        return f"\033[91m{self.number:2}\033[0m" if self.marked else f"{self.number:2}"
+
+    __repr__ = __str__
+
 
 
 
