@@ -43,15 +43,21 @@ def main():
             boards.append(board)
 
 
-    print("Find the first board that wins")
+    print("Find the first board that wins:")
     board = guess(boards, random_list, "find first")
-    print("Sum of unmarked numbers: {}, last guessed number: {}, Product {}".format(board.get_unmarked_sum(), board.last_marked, board.get_unmarked_sum() * board.last_marked))
-    # Sum of unmarked numbers: 1137, last guessed number: 5, Product 5685
+    sum = board.get_unmarked_sum()
+    last_marked = board.last_marked
+    print("Sum of unmarked numbers: {}, last maked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
+    # Sum of unmarked numbers: 1137, last maked number: 5, Product 5685
 
-    print("Find the last board that wins")
+    print("Find the last board that wins:")
     board = guess(boards, random_list, "find last")
-    print("Sum of unmarked numbers: {}, last guessed number: {}, Product {}".format(board.get_unmarked_sum(), board.last_marked, board.get_unmarked_sum() * board.last_marked))
-    # Sum of unmarked numbers: 430, last guessed number: 49, Product 21070
+    sum = board.get_unmarked_sum()
+    last_marked = board.last_marked
+    print("Sum of unmarked numbers: {}, last maked number: {}, Product {}".format(sum, last_marked, sum*last_marked))
+    # Sum of unmarked numbers: 430, last maked number: 49, Product 21070
+
+
 
 
 def guess (boards, random_list, strategy):
@@ -59,12 +65,12 @@ def guess (boards, random_list, strategy):
     Check each random number agains all board and returns the first or the last
     board that has a Bingo!
     """
-    for guessed in random_list:
+    for number in random_list:
         for board in boards:
             if board.bingo:
                 # To find the last board, we skip boards with an Bingo!
                 continue
-            board.mark(guessed)
+            board.mark(number)
             #print(board)
             if board.check_bingo():
                 if strategy == "find first":
@@ -88,13 +94,13 @@ class Board:
     def add_row (self, row):
         self.board.append(row)
 
-    def mark (self, guessed):
+    def mark (self, number):
         for row in range(5):
             for col in range(5):
-                if self.board[row][col] == guessed:
+                if self.board[row][col] == number:
                     #print("Mark number {} row={} and col={}".format(guessed,row,col))
                     self.marked[row][col] = True
-                    self.last_marked = guessed
+                    self.last_marked = number
 
     def check_bingo(self):
         for row in range(5):
