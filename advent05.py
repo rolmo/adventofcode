@@ -21,6 +21,8 @@ Include diagonal lines
 
 import sys
 import re
+from collections import defaultdict
+
 
 def main():
 
@@ -28,50 +30,42 @@ def main():
     lines = []
 
     # Read the input and create line objects::
-    max_x = max_y = 0
     for input_line in sys.stdin:
         line = Line(input_line.strip())
         lines.append(line)
-        max_x = max(max_x, line.max_x())
-        max_y = max(max_y, line.max_y())
 
-    board = Board(max_x, max_y)
+    field = Field_of_hydrothermal_vents()
 
     for line in lines:
         if line.is_horzontal_or_vertical():
             for point in line:
-                board.inc(point)
+                field.inc(point)
 
-    print("Spots for horizontal+vertival lines:", board.count_spots())
+    print("Spots for horizontal+vertical lines:", field.count_spots())
+    # Spots for horizontal+vertical lines: 6225
 
     for line in lines:
         if not line.is_horzontal_or_vertical():
             for point in line:
-                board.inc(point)
+                field.inc(point)
 
-    print("Spots for all lines:", board.count_spots())
+    print("Spots for all lines:", field.count_spots())
+    # Spots for all lines: 22116
 
 
+class Field_of_hydrothermal_vents:
 
-class Board:
-
-    def __init__ (self, max_x, max_y):
-        self.board=[]
-        for x in range(max_x):
-            self.board.append([])
-            for y in range(max_y):
-                self.board[x].append(0)
+    def __init__ (self):
+        self.field = defaultdict(int)
 
     def inc (self, point):
-        (x,y) = point
-        self.board[x-1][y-1] += 1
+        self.field[point] += 1
 
     def count_spots (self):
         spots = 0
-        for row in self.board:
-            for cell in row:
-                if cell > 1:
-                    spots += 1
+        for point in self.field:
+            if self.field[point] > 1:
+                spots += 1
         return spots
 
 
@@ -81,27 +75,21 @@ class Line:
         self.parse_text_line(text)
         self.cursor_x = self.x1
         self.cursor_y = self.y1
-        # directions (set_x, step_y) for the iterator
-        self.step_x = self.step_y = 0
-        if self.x1 < self.x2: self.step_x = 1
-        if self.x1 > self.x2: self.step_x = -1
-        if self.y1 < self.y2: self.step_y = 1
-        if self.y1 > self.y2: self.step_y = -1
+        # directions (step_x, step_y) for the iterator
+        direction = lambda x: [1, 0, -1][(x <= 0) + (x < 0)]
+        self.step_x = direction(self.x2 - self.x1)
+        self.step_y = direction(self.y2 - self.y1)
 
     def parse_text_line (self, text):
-        # 683,807 -> 370,494
+        # Format: "683,807 -> 370,494"
         matches = re.search('^(\d+),(\d+)\s+->\s+(\d+),(\d+)$', text)
         if matches:
             self.x1 = int(matches.group(1))
             self.y1 = int(matches.group(2))
             self.x2 = int(matches.group(3))
             self.y2 = int(matches.group(4))
-
-    def max_x (self):
-        return (max(self.x1, self.x2))
-
-    def max_y (self):
-        return (max(self.y1, self.y2))
+        else:
+            raise ValueError
 
     def is_horzontal_or_vertical (self):
         return self.x1 == self.x2 or self.y1 == self.y2
