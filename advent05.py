@@ -30,7 +30,6 @@ import sys
 import re
 from collections import defaultdict
 from dataclasses import dataclass
-from pprint import pprint
 
 
 def main():
@@ -100,7 +99,7 @@ class Line:
 
     def __next__(self):
         # To include the first and the last point on the line, we
-        # skip the "cursor.move" for the first iteratio:
+        # skip the "cursor.move" for the first iteration:
         if not self.cursor:
             self.cursor = self.point1.clone()
             return self.cursor
