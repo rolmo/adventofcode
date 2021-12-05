@@ -3,14 +3,19 @@
 """
 Part 1:
 
-Each line of vents is given as a line segment in the format x1,y1 -> x2,y2 where x1,y1 are the coordinates of one end the line segment and x2,y2 are the coordinates of the other end. These line segments include the points at both ends. In other words:
+Each line of vents is given as a line segment in the format x1,y1 -> x2,y2 where
+x1,y1 are the coordinates of one end the line segment and x2,y2 are the
+coordinates of the other end.
+These line segments include the points at both ends. In other words:
 
     An entry like 1,1 -> 1,3 covers points 1,1, 1,2, and 1,3.
     An entry like 9,7 -> 7,7 covers points 9,7, 8,7, and 7,7.
 
-For now, only consider horizontal and vertical lines: lines where either x1 = x2 or y1 = y2.
+For now, only consider horizontal and vertical lines:
+lines where either x1 = x2 or y1 = y2.
 
-To avoid the most dangerous areas, you need to determine the number of points where at least two lines overlap.
+To avoid the most dangerous areas, you need to determine the number of points
+where at least two lines overlap.
 
 
 Part 2:
@@ -73,8 +78,7 @@ class Line:
 
     def __init__ (self, text):
         self.parse_text_line(text)
-        self.cursor_x = self.x1
-        self.cursor_y = self.y1
+        (self.cursor_x, self.cursor_y) = (self.x1, self.y1)
         # directions (step_x, step_y) for the iterator
         direction = lambda x: [1, 0, -1][(x <= 0) + (x < 0)]
         self.step_x = direction(self.x2 - self.x1)
@@ -84,10 +88,7 @@ class Line:
         # Format: "683,807 -> 370,494"
         matches = re.search('^(\d+),(\d+)\s+->\s+(\d+),(\d+)$', text)
         if matches:
-            self.x1 = int(matches.group(1))
-            self.y1 = int(matches.group(2))
-            self.x2 = int(matches.group(3))
-            self.y2 = int(matches.group(4))
+            (self.x1,self.y1,self.x2,self.y2) = list(map(int, matches.group(1,2,3,4)))
         else:
             raise ValueError
 
@@ -98,8 +99,7 @@ class Line:
         return self
 
     def __next__(self):
-        pos_x = self.cursor_x
-        pos_y = self.cursor_y
+        (pos_x, pos_y) = (self.cursor_x, self.cursor_y)
         self.cursor_x += self.step_x
         self.cursor_y += self.step_y
         if pos_x > max(self.x1, self.x2) or pos_x < min(self.x1, self.x2) or pos_y > max(self.y1, self.y2) or pos_y < min(self.y1, self.y2):
