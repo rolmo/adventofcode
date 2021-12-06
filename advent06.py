@@ -107,6 +107,8 @@ def main():
 # and "next spawning date". If we encounter a cache hit, we can skip the
 # creation of the siblings fpr this node and use the cached result.
 
+# An inital count of 300 fishes with ttl=256 needs about 20 milliseconds
+
 class Fish:
 
     def __init__ (self, time_to_live, result_cache, ident_output, next_spawn=8):
