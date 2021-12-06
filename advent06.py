@@ -82,11 +82,13 @@ How many lanternfish would there be after 256 days?
 """
 
 import sys
+import time
 
 def main():
+    start_time = time.time()
     random_list=list(map(int, sys.stdin.readline().strip().split(',')))
 
-    time_to_live = 256   # How many days we spend for the reproduction
+    time_to_live = 2560   # How many days we spend for the reproduction
     fishes = []
     result_cache = {}
     for next_spawn in random_list:
@@ -99,7 +101,15 @@ def main():
         # print(fish)   # this prints recursive all siblings ... only usable for small tests
         total += fish.me_and_siblings
 
-    print("Total:", total)
+    end_time = time.time()
+
+    print("Total: {} (cosumed time: {} ms)".format(total, 1000 * (end_time - start_time)))
+    # For time_to_live = 80:
+    # Total: 346063 (cosumed time: 2.863168716430664 ms)
+    # For time_to_live = 256:
+    # Total: 1572358335990 (cosumed time: 23.419857025146484 ms)
+    # And for time_to_live = 2560  :-)
+    # Total: 2325385468360990176669515856523251980773072991727171248428903734983932396487363680651827688875358058 (cosumed time: 2207.188844680786 ms)
 
 
 # To determine the total number, we follow a recursive approach with depth-first
