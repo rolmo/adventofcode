@@ -113,11 +113,13 @@ def main():
 
 
 # To determine the total number, we follow a recursive approach with depth-first
-# search. For each node we cache the result with a cache key of "days to live"
-# and "next spawning date". If we encounter a cache hit, we can skip the
-# creation of the siblings fpr this node and use the cached result.
-
-# An inital count of 300 fishes with ttl=256 needs about 20 milliseconds
+# search. We achieve this by immediately calling the "aging" method for each
+# newly created fish - until the end of the TTL. For each node we cache the
+# result with a cache key combining "days to live" and "next spawning date". If
+# we encounter a cache hit, we can skip the creation of the siblings for this
+# node and use the cached result.
+#
+# The effort is thus reduced from logarithmic to quadratic (See results above).
 
 class Fish:
 
