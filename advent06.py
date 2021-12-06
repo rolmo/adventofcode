@@ -83,16 +83,51 @@ How many lanternfish would there be after 256 days?
 
 import sys
 import time
+import collections
 
 def main():
-    start_time = time.time()
+
     random_list=list(map(int, sys.stdin.readline().strip().split(',')))
 
-    time_to_live = 2560   # How many days we spend for the reproduction
+    start_time = time.time()
+
+    # Solution 1: with recursive depth search^
+    total = depth_search(random_list, 256)
+
+    end_time = time.time()
+
+    print("Total: {} (cosumed time: {} ms)".format(total, 1000 * (end_time - start_time)))
+    # For days = 80:
+    # Total: 346063 (cosumed time: 2.863168716430664 ms)
+    # For days = 256:
+    # Total: 1572358335990 (cosumed time: 23.419857025146484 ms)
+    # And for days = 2560  :-)
+    # Total: 2325385468360990176669515856523251980773072991727171248428903734983932396487363680651827688875358058 (cosumed time: 2207.188844680786 ms)
+    # Efford: quadrat
+
+    start_time = time.time()
+
+    # Solution 2: with a circle register:
+    total = circle_register(random_list, 256)
+
+    end_time = time.time()
+
+    print("Total: {} (cosumed time: {} ms)".format(total, 1000 * (end_time - start_time)))
+    # For days = 256
+    # Total: 1572358335990 (cosumed time: 0.10013580322265625 ms)
+    # And for days = 2560  :-)
+    # Total: 2325385468360990176669515856523251980773072991727171248428903734983932396487363680651827688875358058 (cosumed time: 0.6642341613769531 ms)
+    # Effort: linear
+
+
+
+def depth_search(random_list, days):
+
+    time_to_live = days
     fishes = []
     result_cache = {}
+    ident_output = 0
     for next_spawn in random_list:
-        ident_output = 0
         fish = Fish(time_to_live, result_cache, ident_output, next_spawn)
         fishes.append(fish)
 
@@ -101,27 +136,48 @@ def main():
         # print(fish)   # this prints recursive all siblings ... only usable for small tests
         total += fish.me_and_siblings
 
-    end_time = time.time()
-
-    print("Total: {} (cosumed time: {} ms)".format(total, 1000 * (end_time - start_time)))
-    # For time_to_live = 80:
-    # Total: 346063 (cosumed time: 2.863168716430664 ms)
-    # For time_to_live = 256:
-    # Total: 1572358335990 (cosumed time: 23.419857025146484 ms)
-    # And for time_to_live = 2560  :-)
-    # Total: 2325385468360990176669515856523251980773072991727171248428903734983932396487363680651827688875358058 (cosumed time: 2207.188844680786 ms)
+    return total
 
 
-# To determine the total number, we follow a recursive approach with depth-first
-# search. We achieve this by immediately calling the "aging" method for each
-# newly created fish - until the end of the TTL. For each node we cache the
-# result with a cache key combining "days to live" and "next spawning date". If
-# we encounter a cache hit, we can skip the creation of the siblings for this
-# node and use the cached result.
-#
-# The effort is thus reduced from logarithmic to quadratic (See results above).
+
+def circle_register(random_list, days):
+
+    circle = collections.deque(maxlen=9)
+    for n in range(9):
+        circle.append(0)
+
+    for next_spawn in random_list:
+        circle[next_spawn] = circle[next_spawn] + 1
+
+    #print("Initial:       ", end="")
+    #print(circle)
+    for day in range(days):
+        #print("After day {:>3}: ".format(day+1), end="")
+        circle[7] = circle[7] + circle[0]
+        circle.rotate(-1)
+        #print(circle)
+
+    total = 0
+    for num in circle:
+        total += num
+
+    return total
+
+
+
 
 class Fish:
+
+    """
+    To determine the total number, we follow a recursive approach with depth-first
+    search. We achieve this by immediately calling the "aging" method for each
+    newly created fish - until the end of the TTL. For each node we cache the
+    result with a cache key combining "days to live" and "next spawning date". If
+    we encounter a cache hit, we can skip the creation of the siblings for this
+    node and use the cached result.
+
+    The effort is thus reduced from logarithmic to quadratic (See results above).
+    """
 
     def __init__ (self, time_to_live, result_cache, ident_output, next_spawn=8):
         self.time_to_live = time_to_live
