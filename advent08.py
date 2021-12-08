@@ -99,8 +99,6 @@ class Seven_Segment:
             result.append(self.wiring[n])
         return sorted(result)
 
-    def __str__ (self):
-        return pformat(self.segments)
 
 
 @dataclass
