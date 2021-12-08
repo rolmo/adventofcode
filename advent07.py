@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Usage: cat advent06.input | ./advent06.py
+# Usage: cat advent07.input | ./advent07.py
 
 
 """
