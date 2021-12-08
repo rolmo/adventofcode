@@ -21,6 +21,7 @@ def main():
         (input, output) = line.strip().split(' | ')
         all_data.append(Data(input.split(" "),output.split(" ")))
 
+
     # Part 1:
 
     count = 0
@@ -43,17 +44,17 @@ def main():
             for num in data.inputs:
                 if ss.get_number(num) == None:
                     all_matches = False
-                    continue
+                    break
             if all_matches:
                 for n in range(4):
                     num = data.outputs[n]
                     total += ss.get_number(num) * (10**(3-n))
-                continue
+                break
 
     end_time = time.time()
 
     print("Sum over all outputs: {} (time: {} ms)".format(total, 1000 * (end_time - start_time)))
-    # Sum over all outputs: 1091609 (time: 19159.322261810303 ms)
+    # Sum over all outputs: 1091609 (time: 2214.4858837127686 ms)
 
 # For Part 1:
 def segment_count_to_number(segments):
