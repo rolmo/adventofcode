@@ -44,36 +44,45 @@ def main():
             s = get_pos(data, south(pos)).number
             w = get_pos(data, west(pos)).number
             e = get_pos(data, east(pos)).number
-            #print("({}:{}): v({}) < min(n({}),s({}),w({}),e({})) min=({})".format(row, col, value, north, south, west, east, min(north, south, west, east)))
             if value < min(n, s, w, e):
                 data[row][col].low_point = True
-                print("Minimum: {} ({},{})".format(value, row+1, col+1))
+                # print("Minimum: {} ({},{})".format(value, row+1, col+1))
                 num_of_minimum += 1
                 sum_of_minimum += (value + 1)
+
                 basin_size = find_basin_members(data, pos)
-                print("Basin-Size:", basin_size)
+                # print("Basin-Size:", basin_size)
                 basin_sizes.append(basin_size)
 
+    # Print the colored map:
     for row in data:
         for col in row:
             print(col, end="")
         print()
 
-    print("num of minimals>>", num_of_minimum)
-    print("sum of minimals+1>>", sum_of_minimum)
+    # Part 1:
+    print("num of low points: ", num_of_minimum)
+    print("sum of low points+1: ", sum_of_minimum)
+    # num of low points:  239
+    # sum of low points+1:  560
+
+    # Part 2:
     basin_sizes.sort(reverse=True)
     (basin1,basin2,basin3) = basin_sizes[0:3]
     print("Largest basins:", basin1,basin2,basin3, "Product: ", basin1 * basin2 * basin3)
-    # 560
+    # Largest basins: 103 97 96 Product:  959136
+
+
 
 
 def find_basin_members (data, pos):
     if get_pos(data, pos).basin_member:
+        # position is already markes as basin_member
         return 0
     if get_pos(data, pos).number >= 9:
         return 0
-    size = 1
-    get_pos(data, pos).basin_member = True
+    size = 1  # the position itself
+    get_pos(data, pos).basin_member = True  # mark the position as counted
     # Check each direction:
     size += find_basin_members (data, north(pos))
     size += find_basin_members (data, south(pos))
