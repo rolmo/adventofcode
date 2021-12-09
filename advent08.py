@@ -30,11 +30,15 @@ def main():
             if segment_count_to_number(output):
                 count += 1
     print("Count of 1/4/7/8:", count)
-
+    # Count of 1/4/7/8: 456
 
     # Part 2:
 
     start_time = time.time()
+
+    ss = Seven_Segment(list("abcdefg"))
+    for data in all_data:
+        ss.learn(data.inputs)
 
     total = 0
     for data in all_data:
@@ -101,6 +105,14 @@ class Seven_Segment:
         return sorted(result)
 
 
+    def learn (self, numbers):
+        for c in sorted(numbers, key=len):
+            if len(c) == 2:
+                one = c
+            if len(c) == 3:
+                filter_one = lambda x : not x in one
+                top = list(filter(filter_one, c))
+            
 
 @dataclass
 class Data:
