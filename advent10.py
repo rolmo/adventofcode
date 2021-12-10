@@ -35,10 +35,10 @@ def main():
         try:
             check_code(code)
         except UnmatchedCloser as e:
-            print(e, e.char)
+            #print(e, e.char)
             error_points += Points_for_unexpected_closer[e.char]
         except CloserWithoutOpener as e:
-            print(e, e.char)
+            #print(e, e.char)
             error_points += Points_for_unexpected_closer[e.char]
         except UnclosedOpener as e:
             #print(e, e.chars)
