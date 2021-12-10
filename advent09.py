@@ -21,7 +21,6 @@ Part 2:
 """
 
 import sys
-import time
 from dataclasses import dataclass
 
 def main():
