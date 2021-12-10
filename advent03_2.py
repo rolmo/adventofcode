@@ -3,6 +3,8 @@
 # Usage: cat advent03.input | ./advent03_2.py
 
 """
+https://adventofcode.com/2021/day/3
+
 Keep only numbers selected by the bit criteria for the type of rating value for
 which you are searching. Discard numbers which do not match the bit criteria.
 If you only have one number left, stop; this is the rating value for which you

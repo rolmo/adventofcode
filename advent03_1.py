@@ -3,6 +3,8 @@
 # Usage: cat advent03.input | ./advent03_1.py
 
 """
+https://adventofcode.com/2021/day/3
+
 Each bit in the gamma rate can be determined by finding the most common bit in
 the corresponding position of all numbers in the diagnostic report.
 If the most common bit is 1, the first bit of the gamma rate is 1.

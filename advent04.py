@@ -3,6 +3,8 @@
 # Usage: cat advent04.input | ./advent04.py
 
 """
+https://adventofcode.com/2021/day/4
+
 Part One:
 
 Bingo is played on a set of boards each consisting of a 5x5 grid of numbers.

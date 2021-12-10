@@ -4,6 +4,8 @@
 
 
 """
+https://adventofcode.com/2021/day/5
+
 Part 1:
 
 Each line of vents is given as a line segment in the format "x1,y1 -> x2,y2"

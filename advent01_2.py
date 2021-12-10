@@ -2,6 +2,13 @@
 
 # Usage: cat advent01.input | ./advent01_2.py
 
+"""
+https://adventofcode.com/2021/day/1
+
+Count the number of times a depth measurement increases from the previous measurement
+(We compare a window of 3 measurements)
+"""
+
 import sys
 import collections
 
