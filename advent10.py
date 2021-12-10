@@ -7,6 +7,29 @@
 
 https://adventofcode.com/2021/day/10
 
+Part 1:
+
+Some of the lines aren't corrupted, just incomplete; you can ignore these lines for now.
+Stop at the first incorrect closing character on each corrupted line.
+Compute the total sum of error points:
+    ): 3 points.
+    ]: 57 points.
+    }: 1197 points.
+    >: 25137 points.
+
+Part 2:
+
+Now, discard the corrupted lines. The remaining lines are incomplete.
+Complete this line and calculete the result with:
+    ): 1 point.
+    ]: 2 points.
+    }: 3 points.
+    >: 4 points.
+For each missing bracket calculate a score with:
+ - Start with a total score of 0.
+ - Multiply the total score by 5, then add the value of next missing bracket
+ - The final result is the median over all single scores (There will always be an odd number of scores).
+
 """
 
 import sys
@@ -16,7 +39,7 @@ import statistics
 
 # Set some constants:
 Close_sign_for = {"<":">","(":")","{":"}","[":"]"}
-# All Keys:
+# All keys:
 Opener_sign = [*Close_sign_for]
 # All values:
 Closer_sign = list(Close_sign_for.values())
@@ -35,9 +58,6 @@ def main():
         try:
             check_code(code)
         except UnmatchedCloser as e:
-            #print(e, e.char)
-            error_points += Points_for_unexpected_closer[e.char]
-        except CloserWithoutOpener as e:
             #print(e, e.char)
             error_points += Points_for_unexpected_closer[e.char]
         except UnclosedOpener as e:
@@ -59,7 +79,7 @@ def check_code(code):
             stack.append(c)
         elif c in Closer_sign:
             if len(stack) == 0:
-                raise CloserWithoutOpener(c)
+                raise UnmatchedCloser(c,"Closer without opener")
             opener = stack.pop()
             if c != Close_sign_for[opener]:
                 raise UnmatchedCloser(c)
@@ -72,17 +92,9 @@ def check_code(code):
 
 
 class UnmatchedCloser(Exception):
-    """Raised when we find a closer that matches not the corresponding opener"""
+    """Raised when we find a unmatched closer"""
 
     def __init__(self, char, message="Unmatched closer"):
-        self.char = char
-        self.message = message
-        super().__init__(self.message)
-
-class CloserWithoutOpener(Exception):
-    """Raised when we find a closer but there is no open opener"""
-
-    def __init__(self, char, message="Closer without opener"):
         self.char = char
         self.message = message
         super().__init__(self.message)
