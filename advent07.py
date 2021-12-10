@@ -29,7 +29,8 @@ def main():
     start_positions=list(map(int, sys.stdin.readline().strip().split(',')))
 
     start_time = time.time()
-    (position, fuel) = fuel_consumption(start_positions,"linear")
+    dist_to_fuel = lambda x: x
+    (position, fuel) = fuel_consumption(start_positions, dist_to_fuel)
     end_time = time.time()
 
 
@@ -37,20 +38,16 @@ def main():
     # Best target position (linear fuel consumption): 317; Fuel: 331067 (consumed time: 0.89 ms)
 
     start_time = time.time()
-    (position, fuel) = fuel_consumption(start_positions,"gauss")
+    dist_to_fuel = lambda x: int(x*(x+1)/2)
+    (position, fuel) = fuel_consumption(start_positions, dist_to_fuel)
     end_time = time.time()
 
     print("Best target position (gauss fuel consumption): {}; Fuel: {} (consumed time: {} ms)".format(position, fuel, 1000 * (end_time - start_time)))
-    # Best target position (gauss fuel consumption): 458; Fuel: 92881128 (consumed time: 51.6 ms)
+    # Best target position (gauss fuel consumption): 458; Fuel: 92881128 (consumed time: 45 ms)
 
 
 
-def fuel_consumption (positions, algorithmus):
-
-    if algorithmus == "gauss":
-        dist_to_fuel = lambda x: int(x*(x+1)/2)
-    else:
-        dist_to_fuel = lambda x: x
+def fuel_consumption (positions, dist_to_fuel):
 
     # Strategie:
     # We split the list at the median in two sub lists ("left_positions" (decreased order) and "right_positions" (increased order)).
