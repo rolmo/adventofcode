@@ -32,18 +32,31 @@ def main():
     print("Count of 1/4/7/8:", count)
     # Count of 1/4/7/8: 456
 
-    # Part 2:
+    # Part 2.1: determine the numbers by puzzling
 
     start_time = time.time()
 
-    ss = Seven_Segment(list("abcdefg"))
+    total = 0
     for data in all_data:
-        ss.learn(data.inputs)
+        ssl = Seven_Segment_Learning()
+        ssl.learn(data.inputs)
+        for n in range(4):
+            num = data.outputs[n]
+            total += ssl.get_number(num) * (10**(3-n))
+
+    end_time = time.time()
+
+    print("Sum over all outputs: {} (time: {} ms)".format(total, 1000 * (end_time - start_time)))
+    # Sum over all outputs: 1091609 (time: 6.201267242431641 ms)
+
+    # Part 2.2: determine the numbers by brute force (test all permutations)
+
+    start_time = time.time()
 
     total = 0
     for data in all_data:
         for permutation in list(itertools.permutations(list("abcdefg"))):
-            ss = Seven_Segment(permutation)
+            ss = Seven_Segment_Brute_Force(permutation)
             all_matches = True
             for num in data.inputs:
                 if ss.get_number(num) == None:
@@ -69,12 +82,58 @@ def segment_count_to_number(segments):
     return None
 
 
-# For Part 2:
-class Seven_Segment:
+# For Part 2.1:
+class Seven_Segment_Learning:
+
+    def __init__ (self):
+        self.patterns = {}
+
+    def learn (self, numbers):
+        for c in sorted(numbers, key=len):
+            c = ''.join(sorted(c))
+            if len(c) == 2:   # -> 1
+                self.patterns[c] = 1
+                one = c
+                filter_one = lambda x : not x in one
+            if len(c) == 3:   # -> 7
+                self.patterns[c] = 7
+                #top = list(filter(filter_one, c))
+            if len(c) == 4:   # -> 4
+                self.patterns[c] = 4
+                #mid_toleft = list(filter(filter_one, c))
+                four = c
+                filter_four = lambda x : not x in four
+            if len(c) == 5:   # -> 2,3,5
+                diff_four_one = list(filter(filter_one, four))
+                filter_diff_four_one = lambda x : not x in diff_four_one
+                if len(list(filter(filter_four, c))) == 3:
+                    self.patterns[c] = 2
+                elif len(list(filter(filter_diff_four_one, c))) == 4:
+                    self.patterns[c] = 3
+                else:
+                    self.patterns[c] = 5
+            if len(c) == 6:    # -> 0,6,9
+                if len(list(filter(filter_four, c))) == 2:
+                    self.patterns[c] = 9
+                elif len(list(filter(filter_one, c))) == 4:
+                    self.patterns[c] = 0
+                else:
+                    self.patterns[c] = 6
+            if len(c) == 7:    # --> 8
+                self.patterns[c] = 8
+
+    def get_number(self,num):
+        num = ''.join(sorted(num))
+        return(self.patterns[num])
+
+
+# For Part 2.2:
+class Seven_Segment_Brute_Force:
 
     def __init__ (self, wiring):
         # Example for wiring: ('f', 'b', 'd', 'e', 'c', 'g', 'a')
         ordered = ('a','b','c','d','e','f','g')
+        self.patterns = {}
         self.wiring = {}
         for n in range(7):
             self.wiring[wiring[n]] = ordered[n]
@@ -104,15 +163,6 @@ class Seven_Segment:
             result.append(self.wiring[n])
         return sorted(result)
 
-
-    def learn (self, numbers):
-        for c in sorted(numbers, key=len):
-            if len(c) == 2:
-                one = c
-            if len(c) == 3:
-                filter_one = lambda x : not x in one
-                top = list(filter(filter_one, c))
-            
 
 @dataclass
 class Data:
