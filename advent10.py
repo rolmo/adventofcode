@@ -34,11 +34,11 @@ def main():
         code = line.strip()
         try:
             check_code(code)
-        except UnexpectedCloser as e:
-            #print(e, e.char)
+        except UnmatchedCloser as e:
+            print(e, e.char)
             error_points += Points_for_unexpected_closer[e.char]
         except CloserWithoutOpener as e:
-            #print(e, e.char)
+            print(e, e.char)
             error_points += Points_for_unexpected_closer[e.char]
         except UnclosedOpener as e:
             #print(e, e.chars)
@@ -62,7 +62,7 @@ def check_code(code):
                 raise CloserWithoutOpener(c)
             opener = stack.pop()
             if c != Close_sign_for[opener]:
-                raise UnexpectedCloser(c)
+                raise UnmatchedCloser(c)
         else:
             raise NoCloserOrOpener
     if len(stack):
@@ -71,10 +71,10 @@ def check_code(code):
 
 
 
-class UnexpectedCloser(Exception):
+class UnmatchedCloser(Exception):
     """Raised when we find a closer that matches not the corresponding opener"""
 
-    def __init__(self, char, message="Unexpected closer"):
+    def __init__(self, char, message="Unmatched closer"):
         self.char = char
         self.message = message
         super().__init__(self.message)
@@ -88,7 +88,7 @@ class CloserWithoutOpener(Exception):
         super().__init__(self.message)
 
 class UnclosedOpener(Exception):
-    """We ar at the end of the string, but there are unclosed openers"""
+    """We are at the end of the string, but there are unclosed openers"""
 
     def __init__(self, chars, message="Opener without closer"):
         self.chars = chars
