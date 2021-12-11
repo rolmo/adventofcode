@@ -20,6 +20,8 @@ def main():
 
 
     for step in board:
+        if step <= 100:
+            print(board)
         if step == 100:
             print("Total flashes after 100 steps:", board.flash_count)
         if step > 100 and board.all_flashes:
@@ -102,7 +104,7 @@ class Board:
         return self._steps
 
     def __str__ (self):
-        out = ""
+        out = f"Board after step {self._steps}\n"
         for row in self.board:
             for octopus in row:
                 out += str(octopus)
