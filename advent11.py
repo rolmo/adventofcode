@@ -30,15 +30,15 @@ def main():
         print("After step", step+1)
         print(board1)
 
-    print("Tolat flash count", board1.flash_count)
-    # Tolat flash count 1591
+    print("Tolat flash count:", board1.flash_count)
+    # Tolat flash count: 1591
 
 
     # Part 2:
 
     steps = 0
     flashes = 0
-    all_flashes = board2.max_row * board2.max_col
+    all_flashes = board2.rows * board2.cols
     while flashes < all_flashes:
         steps += 1
         flashes = board2.step()
@@ -46,50 +46,54 @@ def main():
     print("All flashes ({}) after {} steps".format(all_flashes,steps))
     # All flashes (100) after 314 steps
 
+
+
+
 class Board:
 
     def __init__ (self):
         self.board=[]
-        self.max_row = 0
-        self.max_col = 0
+        self.rows = 0
+        self.cols = 0
         self.flash_count = 0
 
 
     def add_row (self,input_row):
         row = []
-        self.max_col = max(self.max_col, len(input_row))
+        self.cols = len(input_row)
         for num in input_row:
             octupus = Octopus(int(num))
             row.append(octupus)
         self.board.append(row)
-        self.max_row += 1
+        self.rows += 1
 
 
     def step (self):
-        for row in range(self.max_row):
-            for col in range(self.max_col):
+        for row in range(self.rows):
+            for col in range(self.cols):
                 self._inc_pos(row,col)
         return self._count_and_reset_flashes()
 
 
     def _count_and_reset_flashes (self):
         count = 0
-        for row in range(self.max_row):
-            for col in range(self.max_col):
-                if self.board[row][col].flash:
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.board[row][col].reset_flash():
                     count += 1
-                    self.board[row][col].flash = False
         self.flash_count += count
         return count
 
 
     def _inc_pos (self, row, col):
-        #print("inc:",row,col,self.max_row,self.max_col)
-        if row < 0: return False
-        if col < 0: return False
-        if row >= self.max_row: return False
-        if col >= self.max_col: return False
+        # Do nothing for unreachable positions:
+        if row < 0: return
+        if col < 0: return
+        if row >= self.rows: return
+        if col >= self.cols: return
+        # Increment the energy for the octopus ...
         if self.board[row][col].inc():
+            # ... and if the octopus flashes, increment all neighbors
             self._inc_neighbors(row,col)
 
 
@@ -117,21 +121,37 @@ class Board:
 
 @dataclass
 class Octopus:
-    energy: int
-    flash: bool = False
+    _energy: int
+    _flash: bool = False
 
     def inc (self):
-        if self.flash:
+        """
+        inc increments the energy by one.
+
+        if the energy raises the threshold 9:
+            - set energy to 0
+            - set a flag "flash"
+            - return True (all other cases return False)
+
+        if the flag "flash" is already set, do nothing
+        """
+        if self._flash:
             return False
-        self.energy += 1
-        if self.energy > 9:
-            self.energy = 0
-            self.flash = True
+        self._energy += 1
+        if self._energy > 9:
+            self._energy = 0
+            self._flash = True
+            return True
+        return False
+
+    def reset_flash (self):
+        if self._flash:
+            self._flash = False
             return True
         return False
 
     def __str__ (self):
-        return f"{self.energy:2}"
+        return f"{self._energy:2}"
 
 
 
