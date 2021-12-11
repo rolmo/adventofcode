@@ -14,38 +14,18 @@ from dataclasses import dataclass
 
 def main():
 
-    board1 = Board()
-    board2 = Board()
+    board = Board()
     for line in sys.stdin:
-        board1.add_row(line.strip())
-        board2.add_row(line.strip())
-
-    # Part 1:
-
-    print("Before any steps:")
-    print(board1)
-
-    for step in range(100):
-        board1.step()
-        print("After step", step+1)
-        print(board1)
-
-    print("Tolat flash count:", board1.flash_count)
-    # Tolat flash count: 1591
+        board.add_row(line.strip())
 
 
-    # Part 2:
+    for step in board:
+        if step == 100:
+            print("Total flashes after 100 steps:", board.flash_count)
+        if step > 100 and board.all_flashes:
+            break
 
-    steps = 0
-    flashes = 0
-    all_flashes = board2.rows * board2.cols
-    while flashes < all_flashes:
-        steps += 1
-        flashes = board2.step()
-
-    print("All flashes ({}) after {} steps".format(all_flashes,steps))
-    # All flashes (100) after 314 steps
-
+    print("All flashes after step:", board.all_flashes)
 
 
 
@@ -68,7 +48,7 @@ class Board:
         self.rows += 1
 
 
-    def step (self):
+    def _step (self):
         for row in range(self.rows):
             for col in range(self.cols):
                 self._inc_pos(row,col)
@@ -86,6 +66,8 @@ class Board:
                 if self._octopus(row,col).reset_flash():
                     count += 1
         self.flash_count += count
+        if (count == self.rows * self.cols):
+            self.all_flashes = self._steps
         return count
 
 
@@ -109,6 +91,15 @@ class Board:
         self._inc_pos(row+1,col)
         self._inc_pos(row+1,col+1)
 
+    def __iter__ (self):
+        self._steps = 0
+        self.all_flashes = False
+        return self
+
+    def __next__ (self):
+        self._steps += 1
+        self._step()
+        return self._steps
 
     def __str__ (self):
         out = ""
