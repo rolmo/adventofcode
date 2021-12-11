@@ -75,11 +75,15 @@ class Board:
         return self._count_and_reset_flashes()
 
 
+    def _octopus (self, row, col):
+        """ Returns a single octupus for row+col """
+        return self.board[row][col]
+
     def _count_and_reset_flashes (self):
         count = 0
         for row in range(self.rows):
             for col in range(self.cols):
-                if self.board[row][col].reset_flash():
+                if self._octopus(row,col).reset_flash():
                     count += 1
         self.flash_count += count
         return count
@@ -87,12 +91,10 @@ class Board:
 
     def _inc_pos (self, row, col):
         # Do nothing for unreachable positions:
-        if row < 0: return
-        if col < 0: return
-        if row >= self.rows: return
-        if col >= self.cols: return
+        if 0 > row or row >= self.rows: return
+        if 0 > col or col >= self.cols: return
         # Increment the energy for the octopus ...
-        if self.board[row][col].inc():
+        if self._octopus(row,col).inc():
             # ... and if the octopus flashes, increment all neighbors
             self._inc_neighbors(row,col)
 
