@@ -54,12 +54,13 @@ class Board:
         for row in range(self.rows):
             for col in range(self.cols):
                 self._inc_pos(row,col)
-        return self._count_and_reset_flashes()
+        self._count_and_reset_flashes()
 
 
     def _octopus (self, row, col):
         """ Returns a single octupus for row+col """
         return self.board[row][col]
+
 
     def _count_and_reset_flashes (self):
         count = 0
@@ -70,7 +71,6 @@ class Board:
         self.flash_count += count
         if (count == self.rows * self.cols):
             self.all_flashes = self._steps
-        return count
 
 
     def _inc_pos (self, row, col):
@@ -146,7 +146,7 @@ class Octopus:
         return False
 
     def __str__ (self):
-        return f"{self._energy:2}"
+        return f"{self._energy:3}"
 
 
 
