@@ -4,8 +4,20 @@
 
 
 """
-
 https://adventofcode.com/2021/day/12
+
+The input consists of paths between caves.
+Small caves consist of lowercase letters, large caves consist of uppercase letters.
+
+Part 1:
+
+Find all paths from "start" to "end". Large caves can be traversed as many times
+as you like, small caves may only be visited once.
+
+Part 2:
+
+Find all paths from "start" to "end". Large caves can be traversed as many times
+as you like, one of the small caves (only one) can visited twice.
 
 """
 
@@ -80,6 +92,7 @@ class Map:
 
 
     def stop_criteria_one (self, cave, path):
+        """ Return True (= stop) if the cave is lowercase and already in the path """
         if cave.islower():
             paths = path.split(",")
             if cave in paths:
@@ -88,6 +101,11 @@ class Map:
 
 
     def stop_criteria_two (self, next_cave, path):
+        """
+        Return True (= stop) if the cave is lowercase and ...
+        - if the cave already visited twice
+        - if the cave is already visited and an other cave is already visited twice
+        """
         if next_cave.isupper():
             return False
         paths = path.split(",")
