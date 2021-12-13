@@ -106,8 +106,6 @@ class Map:
         - if the cave already visited twice
         - if the cave is already visited and an other cave is already visited twice
         """
-        if next_cave.isupper():
-            return False
         paths = path.split(",")
         paths.append(next_cave)
         counter = collections.Counter(paths)
