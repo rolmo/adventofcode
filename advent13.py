@@ -30,8 +30,6 @@ def main():
             if match:
                 folds.append(Fold(match.group(1),int(match.group(2))))
 
-    print(folds)
-
 
     for fold in folds:
         instruction.fold(fold)
@@ -46,46 +44,41 @@ def main():
 class Instruction:
 
     def __init__ (self):
-        self.dots = []
-        self.folds = []
+        #self.dots = []
+        self.dots = set()
 
 
     def add_dot (self,x,y):
-        self.dots.append(Dot(x,y))
+        #self.dots.append(Dot(x,y))
+        self.dots.add(Dot(x,y))
 
 
     def fold (self, fold):
         #print("Fold:",fold.direction,fold.coordinate)
         if fold.direction == "x":
-            self.fold_x (fold.coordinate)
-        if fold.direction == "y":
-            self.fold_y (fold.coordinate)
-        self.remove_duplicates()
+            self.fold_x(fold.coordinate)
+        elif fold.direction == "y":
+            self.fold_y(fold.coordinate)
+        else:
+            raise UnknownFoldDirection
 
 
     def fold_x (self, fold_x):
+        temp = set()
         for dot in self.dots:
             if dot.x > fold_x:
-              new_x = fold_x-(dot.x-fold_x)
-              dot.x = new_x
+                dot.x = (2*fold_x)-dot.x
+            temp.add(dot)
+        self.dots = temp
 
 
     def fold_y (self, fold_y):
+        temp = set()
         for dot in self.dots:
             if dot.y > fold_y:
-              new_y = fold_y-(dot.y-fold_y)
-              dot.y = new_y
-
-
-    def remove_duplicates(self):
-        d = {}
-        uniq_dots = []
-        for dot in self.dots:
-            dot_string = "{},{}".format(dot.x,dot.y)
-            if not dot_string in d:
-                d[dot_string] = True
-                uniq_dots.append(dot)
-        self.dots = uniq_dots
+                dot.y = (2*fold_y)-dot.y
+            temp.add(dot)
+        self.dots = temp
 
 
     def display (self):
@@ -112,6 +105,13 @@ class Instruction:
 class Dot:
     x: int
     y: int
+
+    def __str__ (self):
+        return f"{self.x},{self.y}"
+
+    def __hash__(self):
+      return hash((self.x, self.y))
+
 
 @dataclass
 class Fold:
