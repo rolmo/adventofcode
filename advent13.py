@@ -2,10 +2,8 @@
 
 # Usage: cat advent13.input | ./advent13.py
 
-
 """
 https://adventofcode.com/2021/day/13
-
 """
 
 import sys
@@ -44,17 +42,14 @@ def main():
 class Instruction:
 
     def __init__ (self):
-        #self.dots = []
         self.dots = set()
 
 
     def add_dot (self,x,y):
-        #self.dots.append(Dot(x,y))
         self.dots.add(Dot(x,y))
 
 
     def fold (self, fold):
-        #print("Fold:",fold.direction,fold.coordinate)
         if fold.direction == "x":
             self.fold_x(fold.coordinate)
         elif fold.direction == "y":
@@ -90,7 +85,7 @@ class Instruction:
         for y in range(max_y+1):
             row = []
             for x in range(max_x+1):
-                row.append(' ')
+                row.append('')
             matrix.append(row)
         for dot in self.dots:
             matrix[dot.y][dot.x] = "#"
@@ -101,16 +96,10 @@ class Instruction:
 
 
 
-@dataclass
+@dataclass(unsafe_hash=True)
 class Dot:
     x: int
     y: int
-
-    def __str__ (self):
-        return f"{self.x},{self.y}"
-
-    def __hash__(self):
-      return hash((self.x, self.y))
 
 
 @dataclass
