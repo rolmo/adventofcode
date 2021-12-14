@@ -26,6 +26,10 @@ for split_at in range(len(template)-1):
     count_of_pairs[pair] += 1
 last_char = template[-1]
 
+# Strategy (example for "ab -> i")
+# - first, we expand "ab" to "aib"
+# - then we split to "ai" and "ib"
+# A "ab" in step x expands to "ai" and "ib" in step x+1
 for step in range(40):
     new_count_of_pairs = defaultdict(int)
     for pair, count in count_of_pairs.items():
@@ -35,6 +39,11 @@ for step in range(40):
         new_count_of_pairs[right] += count
     count_of_pairs = new_count_of_pairs
 
+# Because we double the right car with each split,
+# we count now only to the first char of each pair (and add the last char of the
+# template)
+# (We get the same result id we count the 2nd char of each pair and add the
+# first char of the template)
 count_of_chars = defaultdict(int)
 for pair, count in count_of_pairs.items():
     count_of_chars[pair[0]] += count
