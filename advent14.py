@@ -16,9 +16,8 @@ template=sys.stdin.readline().strip()
 replacements = {}
 for line in sys.stdin:
     if line.strip():
-        (s,r) = line.strip().split(" -> ")
-        rs = s[0] + r + s[1]
-        replacements[s]=r  #((s,r,rs))
+        (search,insert) = line.strip().split(" -> ")
+        replacements[search]=insert
 
 # We split the template "abcde" --> "ab", "bc", "cd", "de":
 count_of_pairs = defaultdict(int)
