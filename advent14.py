@@ -19,14 +19,15 @@ for line in sys.stdin:
         (search,insert) = line.strip().split(" -> ")
         replacements[search]=insert
 
-# We split the template "abcde" --> "ab", "bc", "cd", "de":
+# First, we split the template "abcdef" --> "ab", "bc", "cd", "de", "ef":
+# So we double each char (but not the first/last) - we fix this later
 count_of_pairs = defaultdict(int)
 for split_at in range(len(template)-1):
     pair = template[split_at:split_at+2]
     count_of_pairs[pair] += 1
 last_char = template[-1]
 
-# Strategy (example for "ab -> i")
+# Strategy (example for replacement "ab -> i")
 # - first, we expand "ab" to "aib"
 # - then we split to "ai" and "ib"
 # A "ab" in step x expands to "ai" and "ib" in step x+1
@@ -39,10 +40,10 @@ for step in range(40):
         new_count_of_pairs[right] += count
     count_of_pairs = new_count_of_pairs
 
-# Because we double the right car with each split,
+# Because we double the inner chars with each split (see above),
 # we count now only to the first char of each pair (and add the last char of the
 # template)
-# (We get the same result id we count the 2nd char of each pair and add the
+# (We get the same result if we count the 2nd char of each pair and add the
 # first char of the template)
 count_of_chars = defaultdict(int)
 for pair, count in count_of_pairs.items():
