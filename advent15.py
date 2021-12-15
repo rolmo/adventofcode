@@ -47,6 +47,7 @@ class Map:
         self.max_x = -1
         self.max_y = -1
         self.queue = defaultdict(set)
+        self._loops = 0
 
 
     def add_row (self,input_row):
@@ -82,6 +83,7 @@ class Map:
         startpoint = Point(0,0)
         self._mark_node(startpoint, 0)
         while True:
+            self._loops += 1
             point = self._get_next_from_queue()
             if point == None:
                 break
@@ -90,6 +92,7 @@ class Map:
             for neighbor in neighbors:
                 risc = self.map[neighbor.x][neighbor.y].risc
                 self._mark_node(neighbor, total_risc + risc)
+        print("Loops", self._loops)
         return self.map[self.max_x][self.max_y].total_risc
 
 
@@ -103,11 +106,12 @@ class Map:
 
 
     def _get_next_from_queue (self):
-        print(self.queue)
         for risc in sorted(self.queue.keys()):
             if len(self.queue[risc]):
                 point = self.queue[risc].pop()
                 return point
+            else:
+                del(self.queue[risc])
         return None
 
 
@@ -123,8 +127,8 @@ class Map:
     def print_board (self):
         for row in self.map:
             for col in row:
-                #print("{}.{:2} ".format(col.risc, col.get_total_risc()), end="")
-                print("{:2} ".format(col.risc), end="")
+                print("{}.{:2} ".format(col.risc, col.get_total_risc()), end="")
+                #print("{:2} ".format(col.risc), end="")
             print()
 
 
@@ -140,7 +144,7 @@ class Node:
 
     def get_total_risc (self):
         if self.total_risc == None:
-            return 99
+            return "-"
         return self.total_risc
 
 
