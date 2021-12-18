@@ -38,7 +38,7 @@ def main():
 
     end_time = time.time()
     print("(time: {} ms)".format(1000 * (end_time - start_time)))
-
+    # (time: 1894.0558433532715 ms)
 
 class Map:
 
