@@ -29,7 +29,7 @@ def main():
 
 
     # Calculate the minimum x speed^:
-    # The x coordinate for step n is computes with this rule:
+    # The coordinate for step n is calculated according to this formula:
     # For step 3:
     # x = vx + (vx - 1) + (vx - 2)
     # For step n:
@@ -37,8 +37,8 @@ def main():
     # Or:
     # x = (vx * n) - (n^2 - n)/2
     #
-    # The formula above only alowed for vx >= n
-    # the maximum x is reached fpr vx = n:
+    # The formula above is only alowed for vx >= n
+    # the maximum x is reached for vx = n (after this, vx remains at 0):
     #
     # x_max = vx^2 - vx^2/2 + vx/2
     # x_max = (vx^2)/2 + vx/2
@@ -110,6 +110,11 @@ def main():
 class Trajectory:
 
     def __init__ (self, max_x, min_y):
+        """
+        max_x and min_y is the right and the lower edge
+        of the taget area ... below this coordinates, we stop
+        the iteration because we can't get a hit there
+        """
         self.max_x = max_x
         self.min_y = min_y
 
@@ -146,6 +151,7 @@ class Point:
             if self.y <= area.y1 and self.y >= area.y2:
                 return True
         return False
+
 
 
 class Area:
