@@ -25,8 +25,8 @@ def main():
 
     points1 = 0
     points2 = 0
-    player = "player 2"   # We must start with "player 2", because we set None as "dice" and the first call do nothing - but switch user
-    path = "start"
+    player = "player 2" # We must start with "player 2", because we set None as "dice" and the first iteration call do nothing - but twist the players
+    path = "start"   # Path is only for debugging - not necesaary for the result
     dice = None
     cache = defaultdict(Counter)
 
