@@ -11,6 +11,7 @@ Part 2: all possible games with dics 1-2 and total of 21 points
 import sys
 from collections import Counter
 from collections import defaultdict
+import decimal
 
 Occurrence = Counter()
 
