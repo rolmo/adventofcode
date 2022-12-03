@@ -10,8 +10,6 @@ Usage: cat advent02.input | ./advent02.py
 """
 
 import sys
-import collections
-
 
 Char2item = {
     "A": "Rock",
@@ -28,8 +26,8 @@ Worser_as = {
 }
 Better_as = {
     "Scissors": "Rock",
-    "Paper": "Rock",
-    "Rock": "Scissors" 
+    "Paper": "Scissors",
+    "Rock": "Paper" 
 }
 Points4item = {
     "Rock": 1,
@@ -59,7 +57,6 @@ def main ():
         if right_char == "Z":
             # Z=must win: better item for me
             round2 = Round(Char2item[left_char], Better_as[Char2item[left_char]])
-        print(round2)
         my_points2 += round2.points_right()
 
     print("My points (Part 1):", my_points1)

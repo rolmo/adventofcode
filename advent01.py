@@ -5,7 +5,7 @@
 """
 https://adventofcode.com/2022/day/1
 
-Usage: cat advent00.input | ./advent00.py
+Usage: cat advent01.input | ./advent01.py
 
 """
 
