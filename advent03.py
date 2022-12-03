@@ -29,18 +29,18 @@ def main2 ():
     result = 0
     input = sys.stdin.read().strip().split('\n')
     for group in range(int(len(input)/3)):
-        rucksack1 = input[group*3]
-        rucksack2 = input[group*3 + 1]
-        rucksack3 = input[group*3 + 2]
+        # We convert to set to reduce each list to uniq items:
+        rucksack1 = set(input[group*3])
+        rucksack2 = set(input[group*3 + 1])
+        rucksack3 = set(input[group*3 + 2])
         batch = None
         for c1 in rucksack1:
-            if batch: break # only for performance
             for c2 in rucksack2:
-                if batch: break # only for performance
-                for c3 in rucksack3:
-                    if c1 == c2 and c1 == c3:
-                        batch = c1
-                        break # only for performance
+                if c1 == c2:
+                    for c3 in rucksack3:
+                        if c1 == c3:
+                            batch = c1
+                            break
         result += my_ord(batch)
     print(result)
     # 2708            
@@ -55,4 +55,4 @@ def my_ord (char):
 
 
 if __name__ == '__main__':
-    main1()
+    main2()
