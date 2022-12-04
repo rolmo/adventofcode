@@ -6,7 +6,6 @@ https://adventofcode.com/2022/day/4
 Usage: cat advent04.input | python3 ./advent04.py
 
 """
-15-48,7-16
 import sys
 
 def main ():
@@ -15,10 +14,7 @@ def main ():
 
     fully_contains = overlaps = 0
     for line in input:
-        (range1,range2) = line.split(",")
-        (start1,end1) = range1.split("-")
-        (start2,end2) = range2.split("-")
-        (start1,end1,start2,end2) = (int(start1),int(end1),int(start2),int(end2))
+        ((start1,end1),(start2,end2)) = tuple(tuple(int(x) for x in range.split("-")) for range in line.split(","))
 
         # Part One:
         if (start2 >= start1 and end2 <= end1) or (start1 >= start2 and end1 <= end2):
@@ -32,7 +28,6 @@ def main ():
     # 424
     print(overlaps)
     # 804
-
 
 if __name__ == '__main__':
     main()
