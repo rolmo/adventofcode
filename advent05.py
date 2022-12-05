@@ -27,8 +27,6 @@ def main ():
     print()
     # BSDMQFLSP
 
-
-
     # Part2:
     (stack_lines,command_lines) = readinput(input)
     stacks = parse_stacks(stack_lines)
