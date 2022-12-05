@@ -23,11 +23,11 @@ def main ():
         move1(command, stacks)
     
     for stack in stacks:
-        print(stack[-1])
+        print(stack[-1], end="")
+    print()
     # BSDMQFLSP
 
 
-    print("----")
 
     # Part2:
     (stack_lines,command_lines) = readinput(input)
@@ -38,7 +38,8 @@ def main ():
         move2(command, stacks)
     
     for stack in stacks:
-        print(stack[-1])
+        print(stack[-1], end="")
+    print()
     # PGSQBFLDP
 
 
