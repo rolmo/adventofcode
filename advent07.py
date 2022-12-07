@@ -18,6 +18,8 @@ def main ():
     input = sys.stdin.read().strip().split("\n")
 
     tree = build_tree(input)
+    print(tree)
+
 
     # Part 1:
     list = []
@@ -127,12 +129,12 @@ class Node:
             self.subdirs[dir].all_sizes(list)
 
     def __str__ (self):
-        spacer = "| " * self.level()
-        output = spacer + "Dir: " + self.name + " (" + self.path() + ")"
+        spacer = "|   " * self.level()
+        output = "{}Dir:{} (path={}, size={})".format(spacer, self.name, self.path(), self.size())
         for file in self.files:
-            output += "\n{}{} {}".format(spacer, *file)
+            output += "\n{}|   {} (size={})".format(spacer, *file)
         for dir in self.subdirs.keys():
-            output += "\n{}{}".format(spacer, self.subdirs[dir])
+            output += "\n{}".format(self.subdirs[dir])
         return output
 
 
