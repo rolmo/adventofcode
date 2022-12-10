@@ -8,8 +8,6 @@ Usage: cat advent10.input | python3 ./advent10.py
 """
 import sys
 
-ROPE_LEN = 2  # 2
-
 def main ():
     input = sys.stdin.read().strip().split("\n")
 
@@ -19,10 +17,11 @@ def main ():
         if command == "noop":
             register.append(next_value)
         else:
-            (op,arg) = command.split(" ")
+            # only "addx":
+            arg = int(command.split(" ")[1])
             register.append(next_value)
             register.append(next_value)
-            next_value += int(arg)
+            next_value += arg
             
     # Part1:
     sum_signal_strength = 0
