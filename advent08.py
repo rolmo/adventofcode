@@ -16,7 +16,7 @@ def main ():
     grid.mark_visible_trees()
     print(grid)
 
-    print("Count of visible Trees:", grid.count_visible())
+    print("Count of visible trees:", grid.count_visible())
     # Count of visible Trees: 1690
 
     print("Best view score:", grid.bestview())
@@ -26,12 +26,12 @@ def main ():
 class Grid:
 
     def __init__ (self, input):
-        self._board = []
+        self._grid = []
         for line in input:
             row = list(map(lambda x: [int(x), False], list(line)))
-            self._board.append(row)
-        self._max_x = len(self._board[0])
-        self._max_y = len(self._board)
+            self._grid.append(row)
+        self._max_x = len(self._grid[0])
+        self._max_y = len(self._grid)
 
     def mark_visible_trees (self):
         # Follow each of the 4 edges and mark all visible trees
@@ -46,12 +46,12 @@ class Grid:
         height = -1
         for x in range_x:
             for y in range_y:
-                if self._board[y][x][0] > height:
-                    self._board[y][x][1] = True
-                    height = self._board[y][x][0]
+                if self._grid[y][x][0] > height:
+                    self._grid[y][x][1] = True
+                    height = self._grid[y][x][0]
 
     def count_visible(self):
-        return sum(map(lambda row: len(list(filter(lambda x: x[1], row))), self._board))
+        return sum(map(lambda row: len(list(filter(lambda x: x[1], row))), self._grid))
 
     def bestview(self):
         best_scenic_score = 0
@@ -70,7 +70,7 @@ class Grid:
         return distance1 * distance2 * distance3 * distance4
 
     def _look_direction(self,x,y,dx,dy):
-        height = self._board[y][x][0]
+        height = self._grid[y][x][0]
         width = 0
         while True:
             x = x + dx
@@ -78,17 +78,17 @@ class Grid:
             if x not in range(self._max_x): break
             if y not in range(self._max_y): break
             width += 1
-            if self._board[y][x][0] >= height: break
+            if self._grid[y][x][0] >= height: break
         return width
 
     def __str__(self):
         output = ""
-        for row in self._board:
-            for elem in row:
-                if elem[1]:
-                    output += f"\033[1;36m{elem[0]:2}\033[0m"
+        for row in self._grid:
+            for tree in row:
+                if tree[1]:
+                    output += f"\033[1;36m{tree[0]:2}\033[0m"
                 else:
-                    output += f"{elem[0]:2}"
+                    output += f"{tree[0]:2}"
             output += "\n" 
         return output
 

@@ -99,7 +99,7 @@ class Cave:
             self.add_edge(coordinates[pos],coordinates[pos+1])
 
     def sand_unit (self):
-        sand_unit = Point(Cave.sand_sporn.x,0)
+        sand_unit = Point(Cave.sand_sporn.x,Cave.sand_sporn.y)
         if sand_unit in self.sand:
             return False
         for y in range(self.max_y):
@@ -145,7 +145,6 @@ class Cave:
         self.max_x = Cave.sand_sporn.x + self.max_y
         for x in range(self.min_x, self.max_x+1):
             self.cave.add(Point(x,self.max_y))
-
 
     def __str__ (self):
         out = ""
