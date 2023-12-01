@@ -1,65 +1,60 @@
 #!/usr/bin/env python3
 
-# Usage: cat advent01.input | ./advent01_1.py
-
 """
-https://adventofcode.com/2022/day/1
+https://adventofcode.com/2023/day/1
 
 Usage: cat advent01.input | ./advent01.py
 
 """
 
 import sys
-import collections
+import re
 
 
 def main ():
-    sum = max_sum = 0
-    top3 = Top3()
+    input = sys.stdin.read().strip().split('\n')
 
-    for line in sys.stdin:
-        if line.strip():
-            value = int(line)
-            sum += value
-        else:
-            # Empty row: evaluate the sum:
-            if sum > max_sum:
-                max_sum = sum
-            top3.insert_when_higher(sum)
-            sum = 0
-    # End of input:
-    if sum > max_sum:
-        max_sum = sum
-    top3.insert_when_higher(sum)
+    print("Part 1:", part1(input))
+    # 54561
+    print("Part 2:", part2(input))
+    # 54076
 
-    #### Part A ####
-    print("Maximum is", max_sum)
-    # Maximum is 71300
-
-    #### Part B ####
-    print("Sum for top 3:", top3.sum())
-    # Sum for top 3: 209691
+def part1 (input):
+    sum = 0
+    for line in input:
+        digits = list(filter(lambda i: i.isdigit(), line))
+        first_digit = int(digits[0])
+        last_digit = int(digits[-1])
+        sum = sum + first_digit * 10 + last_digit
+    return sum
 
 
+def part2 (input):
+    sum = 0
+    for line in input:
+        line = replace_number_words_with_digits(line)
+        digits = list(filter(lambda i: i.isdigit(), line))
+        first_digit = int(digits[0])
+        last_digit = int(digits[-1])
+        sum = sum + first_digit * 10 + last_digit
+    return sum
 
-class Top3:
 
-    def __init__(self) -> None:
-        self.list = [0,0,0]
-    
-    def insert_when_higher(self, value) -> bool:
-        if value > self.list[0]:
-            self.list[0] = value
-            self.list.sort()
-            return True
-        return False
-
-    def sum (self) -> int:
-        return sum(self.list)
-
-    def __str__(self) -> str:
-        return str(self.list)
-
+def replace_number_words_with_digits (line):
+    # Problem here:
+    # If we replace "two" with "2", we burn the "t" in "eightwo"
+    # and the follow search for "eight" find "eigh2".
+    # So we preserve the original string on both sides:
+    line = re.sub(r"one", "one1one", line)
+    line = re.sub(r"two", "two2two", line)
+    line = re.sub(r"three", "three3three", line)
+    line = re.sub(r"four", "four4four", line)
+    line = re.sub(r"five", "five5five", line)
+    line = re.sub(r"six", "six6six", line)
+    line = re.sub(r"seven", "seven7seven", line)
+    line = re.sub(r"eight", "eight8eight", line)
+    line = re.sub(r"nine", "nine9nine", line)
+    return line
 
 
 if __name__ == '__main__':
