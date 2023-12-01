@@ -19,6 +19,7 @@ def main ():
     print("Part 2:", part2(input))
     # 54076
 
+
 def part1 (input):
     sum = 0
     for line in input:
