@@ -3,8 +3,8 @@
 """
 https://adventofcode.com/2023/day/1
 
-Usage: cat advent01.input | ./advent01.py
-
+Usage:
+cat advent01.input | ./advent01.py
 """
 
 import sys
