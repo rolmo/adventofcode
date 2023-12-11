@@ -14,8 +14,6 @@ def main ():
     input = sys.stdin.read().strip().split('\n')
 
     pipes = Pipes(input)
-    #for line in input:
-    #    pipes.add_line(line)
 
     # Part1:
     steps = pipes.find_path()
