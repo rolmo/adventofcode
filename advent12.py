@@ -53,12 +53,6 @@ class Springs:
     def __init__ (self, row):
         self.row, checksum = row.split(' ')
         self.checksum = [int(i) for i in checksum.split(',')]
-        self.num_of_known_ok = self.row.count('.')
-        self.num_of_known_broken = self.row.count('#')
-        self.num_of_unknown = self.row.count('?')
-        self.num_of_broken = sum(self.checksum)
-        self.num_of_unknown_broken = self.num_of_broken - self.num_of_known_broken
-        self.num_of_unknown_ok = self.num_of_unknown - self.num_of_unknown_broken
 
 
     def arrangements (self):
@@ -84,8 +78,6 @@ class Springs:
         for i in range(1, len(padded_row) - number + 1):
             if "." in padded_row[i:i+number]:
                 continue
-            if padded_row[i-1] == "#":
-                continue
             if padded_row[i+number] == "#":
                 continue
             if "#" in padded_row[0:i]:
@@ -93,8 +85,7 @@ class Springs:
             # We have found a place for the number - but is the rest also solvable?
             # We reduce the problem to a smaller one and call us recursively:
             if verbose: print("    "*depth, "Possible", number, "at", i)
-            result = self.test_placing_first_number(row[i+number:], checksum[1:], cached_solutions, depth+1)
-            combinations += result
+            combinations += self.test_placing_first_number(row[i+number:], checksum[1:], cached_solutions, depth+1)
         cache_key = row + (",".join([str(i) for i in checksum]))
         cached_solutions[cache_key] = combinations
         return combinations
