@@ -8,7 +8,6 @@ cat advent14.input | ./advent14.py
 """
 
 import sys
-import time
 
 def main ():
     input = sys.stdin.read().strip().split('\n')
