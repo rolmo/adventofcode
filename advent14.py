@@ -30,14 +30,15 @@ def part1 (input):
 
 def part2 (input):
     """
-    We assume, that after some cycles, the results repeat after an given interval.
-    So we flip the platform some time until we find a repeating pattern (About after 200 cycles). 
+    We assume that the result is repeated after various rounds at a certain interval
+    So we flip the platform some time until we find a repeating pattern (After about 200 cycles). 
     Based on this, we can calculate the load for the cycle 1000000000
     """
-
+    load_after = 1000000000
+    
     platform = Platform(input)
     results = []
-    for cycle in range(1, 1000):
+    for cycle in range(1, load_after+1):
         # north, west, south, east.
         for i in range(4):
             platform.tilt_north()
@@ -49,9 +50,10 @@ def part2 (input):
         if interval:
             #print("Repetition found after {} cycles. Interval = {}".format(cycle, interval))
             # Repetition found after 227 cycles. Interval = 39
-            load = calculate_load_for_cycle(1000000000, interval, cycle, results)
+            load = calculate_load_for_cycle(load_after, interval, cycle, results)
             break
     return load
+
 
 
 
@@ -112,7 +114,6 @@ class Platform:
             for i in range(len(self.rounded_rocks[x])):
                 y = self.rounded_rocks[x][i]
                 for potential_new_pos in range(y-1, -1, -1):
-                    #print("potential_new_pos for x={} y={}: {}".format(x, y, potential_new_pos))
                     if potential_new_pos not in self.rounded_rocks[x] and potential_new_pos not in self.cube_shaped[x]:
                         self.rounded_rocks[x][i] = potential_new_pos
                     else:
@@ -133,8 +134,6 @@ class Platform:
             new_rounded_rocks.append([])
             new_cube_shaped.append([])
         for x in range(self.max_edge, -1, -1):
-            #print(self.rounded_rocks[x])
-            #print(self.cube_shaped[x])
             for y in range(self.max_edge + 1):
                 if y in self.rounded_rocks[x]:
                     new_rounded_rocks[self.max_edge - y].insert(0, x)
